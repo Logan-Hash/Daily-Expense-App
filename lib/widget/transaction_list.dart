@@ -11,63 +11,79 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 540,
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-            child: Row(
+      child: transactions.isEmpty
+          ? Column(
               children: <Widget>[
+                Text('There is no transaction !'),
+                SizedBox(height: 20),
                 Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 15,
+                  height: 300,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
                   ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.blue[100],
-                      width: 2,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(10),
+                ),
+              ],
+            )
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return Card(
                   child: Row(
                     children: <Widget>[
-                      Text(
-                        '${transactions[index].amount}' +
-                            ' ' +
-                            '${transactions[index].currency}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 15,
                         ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.blue[100],
+                            width: 2,
+                          ),
+                        ),
+                        padding: EdgeInsets.all(10),
+                        width: 100,
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              '${transactions[index].amount}' +
+                                  ' ' +
+                                  '${transactions[index].currency}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            transactions[index].title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            DateFormat.yMMMMEEEEd()
+                                .formatInBuddhistCalendarThai(
+                                    transactions[index].date),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      transactions[index].title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      DateFormat.yMMMMEEEEd().formatInBuddhistCalendarThai(
-                          transactions[index].date),
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                );
+              },
+              itemCount: transactions.length,
             ),
-          );
-        },
-        itemCount: transactions.length,
-      ),
     );
   }
 }

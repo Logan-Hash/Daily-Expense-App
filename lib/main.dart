@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './widget/new_transaction.dart';
 import './widget/transaction_list.dart';
+import './widget/chart.dart';
 import './model/transaction.dart';
 
 void main() => {runApp(MyApp())};
@@ -11,6 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daily Expense',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        accentColor: Colors.cyanAccent,
+        fontFamily: 'Raleway',
+      ),
       home: MyHomePage(),
     );
   }
@@ -23,21 +29,31 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> userTransactions = [
-    Transaction(
-      id: '1',
-      title: 'New phone',
-      amount: 20000,
-      currency: 'Ks',
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: '1',
-      title: 'New Headphone',
-      amount: 6000,
-      currency: 'Ks',
-      date: DateTime.now(),
-    )
+    // Transaction(
+    //   id: '1',
+    //   title: 'New phone',
+    //   amount: 20000,
+    //   currency: 'Ks',
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: '1',
+    //   title: 'New Headphone',
+    //   amount: 6000,
+    //   currency: 'Ks',
+    //   date: DateTime.now(),
+    // )
   ];
+
+  List<Transaction> get _recentTransaction {
+    return userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void addNewTransaction(String txTitle, int txAmount) {
     final newTx = Transaction(
@@ -69,7 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daily Expense'),
+        title: Text(
+          'Daily Expense',
+          style: TextStyle(fontFamily: 'Raleway'),
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
@@ -82,13 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue[200],
-                child: Text('Chart !'),
-              ),
-            ),
+            Chart(_recentTransaction),
             TransactionList(userTransactions),
           ],
         ),
